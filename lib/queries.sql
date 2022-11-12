@@ -1,0 +1,1 @@
+const addNewDeptQuery = `INSERT INTO department (name) VALUES (?);`;
