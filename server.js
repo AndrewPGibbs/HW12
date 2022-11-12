@@ -3,7 +3,7 @@ const mysql = require('mysql2');
 const inquirer = require("inquirer");
 
 const {mainMenu, addEmployeeInfo, addDeptInfo, addRole} = require('./lib/questions')
-
+const {addNewDeptQuery} = require('./lib/queries')
 
 const db = mysql.createConnection(
     {
@@ -23,6 +23,7 @@ const db = mysql.createConnection(
     .then((res) => {
       db.query(addNewDeptQuery, res.name, function (err, results) {
         console.log(`\n New DEPARTMENT added as ${res.name} \n`);
+        start();
       })
     })
   }
