@@ -21,36 +21,53 @@ const db = mysql.createConnection(
     inquirer
     .prompt(addDeptInfo)
     .then((res) => {
-      db.query()
+      db.query(addNewDeptQuery, res.name, function (err, results) {
+        console.log(`\n New DEPARTMENT added as ${res.name} \n`);
+      })
     })
   }
-inquirer
-  .prompt([
-    /* Pass your questions in here */
-    //list of options: view employes, view roles, etc
 
-  ])
-  .then((answers) => {
-    // Use user feedback for... whatever!!
-    switch answers.<questionobjname>:
-    case "view employees":
-        viewEmployees();
-        break;
-
-  })
-  .catch((error) => {
-    if (error.isTtyError) {
-      // Prompt couldn't be rendered in the current environment
-    } else {
-      // Something else went wrong
-    }
-  });
-
-  function viewEmployees(){
-    const sql = `SELECT * FROM employee`;
-
-    db.query(sql, (err, result) => {
-    if (err) throw err;
-   console.table(result);
+  function start() {
+    inquirer
+    .prompt(mainMenu)
+    .then((res) => {
+      switch (res.menu) {
+        case 'Add New Department':
+          newDept();
+          break;
+          default:
+            console.log(`Hmmm...thats not quite right.`)
+      }
     });
   }
+  start();
+// inquirer
+//   .prompt([
+//     /* Pass your questions in here */
+//     //list of options: view employes, view roles, etc
+
+//   ])
+//   .then((answers) => {
+//     // Use user feedback for... whatever!!
+//     switch answers.<questionobjname>:
+//     case "view employees":
+//         viewEmployees();
+//         break;
+
+//   })
+//   .catch((error) => {
+//     if (error.isTtyError) {
+//       // Prompt couldn't be rendered in the current environment
+//     } else {
+//       // Something else went wrong
+//     }
+//   });
+
+  // function viewEmployees(){
+  //   const sql = `SELECT * FROM employee`;
+
+  //   db.query(sql, (err, result) => {
+  //   if (err) throw err;
+  //  console.table(result);
+  //   });
+  // }
