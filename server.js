@@ -2,6 +2,9 @@ const cTable = require('console.table');
 const mysql = require('mysql2');
 const inquirer = require("inquirer");
 
+const {mainMenu, addEmployeeInfo} = require('./lib/questions')
+
+
 const db = mysql.createConnection(
     {
       host: 'localhost',
@@ -18,6 +21,7 @@ inquirer
   .prompt([
     /* Pass your questions in here */
     //list of options: view employes, view roles, etc
+    
   ])
   .then((answers) => {
     // Use user feedback for... whatever!!
