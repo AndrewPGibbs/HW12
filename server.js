@@ -1,6 +1,6 @@
-const db = require("./config/connection");
-
-const inquirer = require("require")
+const cTable = require('console.table');
+const mysql = require('mysql2');
+const inquirer = require("inquirer");
 
 const db = mysql.createConnection(
     {
@@ -8,10 +8,10 @@ const db = mysql.createConnection(
       // MySQL username,
       user: 'root',
       // TODO: Add MySQL password here
-      password: '',
-      database: 'movies_db'
+      password: 'CodingPassword44',
+      database: 'employee_db'
     },
-    console.log(`Connected to the movies_db database.`)
+    console.log(`Connected to the employee database.`)
   );
 
 inquirer
