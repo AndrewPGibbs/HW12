@@ -47,7 +47,8 @@ function start() {
         break;
       
       case "Quit":
-        process.kill(process.pid, 'SIGINT' );
+       console.log('Goodbye')
+      process.kill(process.pid, 'SIGINT' )
         break;
     }
   });
