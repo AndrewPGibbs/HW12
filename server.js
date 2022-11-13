@@ -8,7 +8,7 @@ const {
   addDeptInfo,
   addRole,
 } = require("./lib/questions");
-const { addNewDeptQuery } = require("./lib/queries");
+const { addNewDeptQuery, departments } = require("./lib/queries");
 
 const db = mysql.createConnection(
   {
@@ -42,7 +42,7 @@ function start() {
         db.query(departments, function (err, res) {
           console.log("\n");
           console.table(res);
-          init();
+          start();
         });
         break;
     }
