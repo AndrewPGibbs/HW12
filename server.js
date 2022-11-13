@@ -8,7 +8,7 @@ const {
   addDeptInfo,
   addRole,
 } = require("./lib/questions");
-const { addNewDeptQuery, departments } = require("./lib/queries");
+const { addNewDeptQuery, departments, addEmployee } = require("./lib/queries");
 
 const db = mysql.createConnection(
   {
@@ -30,7 +30,55 @@ function newDept() {
     });
   });
 }
+// first function for adding employees
+function newEmployee1() {
+  let roleList = [];
+  let managerList = [];
+  db.query("SELECT title FROM role", (err, res) => {
+    for (i = 0; i < res.length; i++) {
+      roleList.push(res[i].title);
+    }
+    db.query(
+      `SELECT CONCAT(first_name, ' ', last_name) AS manager FROM employee WHERE manager_id IS NULL`,
+      (err, res) => {
+        for (i = 0; i < res.length; i++) {
+          managerList.push(res[i].manager);
+        }
+        managerList.push("null");
+        newEmployee2(roleList, managerList);
+      }
+    );
+  });
+}
 
+// second function for adding employees
+function newEmployee2(roleList, managerList) {
+inquirer
+.prompt(addEmployeeInfo(roleList, managerList))
+.then((res) => {
+  db.query(`SELECT id FROM role WHERE title = ?`, res.role, function (err, res){
+    let role_id = res[0].id;
+    let manager_id = res.manager;
+    if (manager_id !== 'null') {
+      db.query(`SELECT id FROM employee WHERE CONCAT(first_name, ' ', last_name) = ?`, res.manager, function (err, res) {
+        manager_id = res[0].id;
+        newEmployee3(res, role_id, manager_id);
+      })
+    }
+    else {
+      manager_id = null;
+      newEmployee3(res, role_id, manager_id);
+    }
+  })
+})
+}
+// third function for adding employees
+function newEmployee3(res, role_id, manager_id) {
+  db.query(addEmployee, [res.firstName, res.lastName, role_id, manager_id], function (err, res) {
+    console.log(`\n Employee ${res.firstName} added`)
+    start();
+  })
+}
 function start() {
   inquirer.prompt(mainMenu).then((res) => {
     switch (res.menu) {
@@ -45,44 +93,16 @@ function start() {
           start();
         });
         break;
-      
+      case "Add new EMPLOYEE":
+        newEmployee1();
+        break;
+
       case "Quit":
-       console.log('Goodbye')
-      process.kill(process.pid, 'SIGINT' )
+        console.log("Goodbye");
+        process.kill(process.pid, "SIGINT");
         break;
     }
   });
 }
 start();
 
-
-// inquirer
-//   .prompt([
-//     /* Pass your questions in here */
-//     //list of options: view employes, view roles, etc
-
-//   ])
-//   .then((answers) => {
-//     // Use user feedback for... whatever!!
-//     switch answers.<questionobjname>:
-//     case "view employees":
-//         viewEmployees();
-//         break;
-
-//   })
-//   .catch((error) => {
-//     if (error.isTtyError) {
-//       // Prompt couldn't be rendered in the current environment
-//     } else {
-//       // Something else went wrong
-//     }
-//   });
-
-// function viewEmployees(){
-//   const sql = `SELECT * FROM employee`;
-
-//   db.query(sql, (err, result) => {
-//   if (err) throw err;
-//  console.table(result);
-//   });
-// }
