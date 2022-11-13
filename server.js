@@ -45,6 +45,10 @@ function start() {
           start();
         });
         break;
+      
+      case "Quit":
+        process.kill(process.pid, 'SIGINT' );
+        break;
     }
   });
 }
