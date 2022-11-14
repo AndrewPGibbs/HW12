@@ -8,7 +8,7 @@ const {
   addDeptInfo,
   addRole,
 } = require("./lib/questions");
-const { addNewDeptQuery, departments, addEmployee, addNewRoleQuery } = require("./lib/queries");
+const { addNewDeptQuery, departments, addEmployee, addNewRoleQuery, viewEmployees } = require("./lib/queries");
 
 const db = mysql.createConnection(
   {
@@ -125,6 +125,12 @@ function start() {
       break;
       case "Add new EMPLOYEE":
         newEmployee1();
+        break;
+      case 'View all EMPLOYEE':
+        db.query(viewEmployees, function (err, res) {
+          console.log('\n');
+          console.table(res);
+        })
         break;
 
       case "Quit":
