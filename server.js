@@ -38,13 +38,11 @@ function newEmployee1() {
     for (i = 0; i < res.length; i++) {
       roleList.push(res[i].title);
     }
-    db.query(
-      `SELECT CONCAT(first_name, ' ', last_name) AS manager FROM employee WHERE manager_id IS NULL`,
-      (err, res) => {
+    db.query(`SELECT CONCAT(first_name, ' ', last_name) AS manager FROM employee WHERE manager_id IS NULL`, (err, res) => {
         for (i = 0; i < res.length; i++) {
           managerList.push(res[i].manager);
         }
-        managerList.push("null");
+        managerList.push('null');
         newEmployee2(roleList, managerList);
       }
     );
@@ -56,13 +54,13 @@ function newEmployee2(roleList, managerList) {
 inquirer
 .prompt(addEmployeeInfo(roleList, managerList))
 .then((res) => {
-  db.query(`SELECT id FROM role WHERE title = ?`, res.role, function (err, res){
-    let role_id = res[0].id;
+  db.query(`SELECT id FROM role WHERE title = ?`, res.role, function (err, results) {
+    let role_id = results[0].id;
     let manager_id = res.manager;
     if (manager_id !== 'null') {
-      db.query(`SELECT id FROM employee WHERE CONCAT(first_name, ' ', last_name) = ?`, res.manager, function (err, res) {
-        manager_id = res[0].id;
-        newEmployee3(res, role_id, manager_id);
+      db.query(`SELECT id FROM employee WHERE CONCAT(first_name, ' ', last_name) = ?`, res.manager, function (err, results) {
+        manager_id = results[0].id;
+        newEmployee3(res , role_id, manager_id);
       })
     }
     else {
@@ -74,7 +72,7 @@ inquirer
 }
 // third function for adding employees
 function newEmployee3(res, role_id, manager_id) {
-  db.query(addEmployee, [res.firstName, res.lastName, role_id, manager_id], function (err, res) {
+  db.query(addEmployee, [res.firstName, res.lastName, role_id, manager_id], function (err, results) {
     console.log(`\n Employee ${res.firstName} added`)
     start();
   })
