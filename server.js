@@ -30,6 +30,28 @@ function newDept() {
     });
   });
 }
+
+function newRole1() {
+  let deptList = [];
+  db.query("SELECT name FROM department", (err, res) => {
+    for (i = 0; i < res.length; i++) {
+      deptList.push(res[i].name);
+    }
+    newRole2(deptList);
+  });
+}
+
+function newRole2(deptList) {
+  inquirer
+  .prompt(addRole(deptList))
+  .then((res) => {
+    db.query(`SELECT id FROM department WHERE name = ?`, res.role, function (err, results) {
+      newrole3(res, results[0].id)
+        })
+      });
+    }
+
+    
 // first function for adding employees
 function newEmployee1() {
   let roleList = [];
