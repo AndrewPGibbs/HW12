@@ -8,7 +8,7 @@ const {
   addDeptInfo,
   addRole,
 } = require("./lib/questions");
-const { addNewDeptQuery, departments, addEmployee } = require("./lib/queries");
+const { addNewDeptQuery, departments, addEmployee, addNewRoleQuery } = require("./lib/queries");
 
 const db = mysql.createConnection(
   {
@@ -45,13 +45,20 @@ function newRole2(deptList) {
   inquirer
   .prompt(addRole(deptList))
   .then((res) => {
-    db.query(`SELECT id FROM department WHERE name = ?`, res.role, function (err, results) {
-      newrole3(res, results[0].id)
+    db.query(`SELECT id FROM department WHERE name = ?`, res.dept_id, function (err, results) {
+      newRole3(res, results[0].id)
         })
       });
     }
 
-    
+    function newRole3(res, dept_id) {
+      db.query(addNewRoleQuery, [res.title, dept_id, res.salary], function (err, results) {
+        console.log(`\n ${res.title} added`);
+        start();
+      })
+    }
+
+
 // first function for adding employees
 function newEmployee1() {
   let roleList = [];
@@ -113,6 +120,9 @@ function start() {
           start();
         });
         break;
+      case 'Add new ROLE':
+      newRole1();
+      break;
       case "Add new EMPLOYEE":
         newEmployee1();
         break;
