@@ -132,6 +132,8 @@ function start() {
           console.table(res);
         })
         break;
+        case 'View all ROLE':
+          db.query
 
       case "Quit":
         console.log("Goodbye");
