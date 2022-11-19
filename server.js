@@ -8,7 +8,7 @@ const {
   addDeptInfo,
   addRole,
 } = require("./lib/questions");
-const { addNewDeptQuery, departments, addEmployee, addNewRoleQuery, viewEmployees } = require("./lib/queries");
+const { addNewDeptQuery, departments, addEmployee, addNewRoleQuery, viewEmployees, viewRoleQuery } = require("./lib/queries");
 
 const db = mysql.createConnection(
   {
@@ -127,14 +127,18 @@ function start() {
         newEmployee1();
         break;
       case 'View all EMPLOYEE':
-        db.query(viewEmployees, function (err, res) {
-          console.log('\n');
-          console.table(res);
+        db.query(viewEmployees, function (err, response) {
+          console.table(response);
         })
+        start();
         break;
         case 'View all ROLE':
-          db.query
-
+          db.query(viewRoleQuery, function (err, res) {
+            console.log('\n');
+            console.table(res);
+            start();
+          })
+          break;
       case "Quit":
         console.log("Goodbye");
         process.kill(process.pid, "SIGINT");
