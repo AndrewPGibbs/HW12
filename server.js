@@ -7,8 +7,9 @@ const {
   addEmployeeInfo,
   addDeptInfo,
   addRole,
+  updateNewEmpInfo,
 } = require("./lib/questions");
-const { addNewDeptQuery, departments, addEmployee, addNewRoleQuery, viewEmployees, viewRoleQuery } = require("./lib/queries");
+const { addNewDeptQuery, updateConst, departments, queryId, empNameFormat, addEmployee, addNewRoleQuery, titleQuery, viewEmployees, viewRoleQuery, updateNewEmp } = require("./lib/queries");
 
 const db = mysql.createConnection(
   {
@@ -106,6 +107,35 @@ function newEmployee3(res, role_id, manager_id) {
     start();
   })
 }
+
+function updateEmp() {
+  let employeeList = [];
+  let rolesList = [];
+  db.query(titleQuery, (err, response) => {
+    for (i = 0; i < response.length; i++) {
+      rolesList.push(response[i].title);
+    }
+    db.query(empNameFormat, (err, response) => {
+      for (i = 0; i < response.length; i++) {
+        employeeList.push(response[i].employee);
+      }
+        inquirer
+        .prompt(updateNewEmpInfo(rolesList, employeeList))
+        .then((res) =>{
+          db.query(queryId, res.role, function (err, response) {
+            let newId = response[0].id;
+            db.query(updateConst, [newId, res.name], function (err, response){
+              console.log('Employee updated!');
+              start();
+            })
+          })
+
+        });
+    });
+   
+
+  });
+}
 function start() {
   inquirer.prompt(mainMenu).then((res) => {
     switch (res.menu) {
@@ -139,6 +169,12 @@ function start() {
             start();
           })
           break;
+          case 'Update EMPLOYEE':
+            updateEmp();
+            break;
+
+
+
       case "Quit":
         console.log("Goodbye");
         process.kill(process.pid, "SIGINT");
